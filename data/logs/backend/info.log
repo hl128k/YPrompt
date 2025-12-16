@@ -53,3 +53,20 @@
 2025-12-16 17:20:42,381 | INFO | Updated user AI config successfully: user_id=1
 2025-12-16 17:20:45,075 | INFO | Updated user AI config successfully: user_id=1
 2025-12-16 17:21:55,510 | INFO | Updated user AI config successfully: user_id=1
+2025-12-16 17:46:52,019 | INFO | ✅ SQLite连接已关闭
+2025-12-16 17:46:52,028 | INFO | ✅ 数据库连接已关闭
+2025-12-16 17:46:53,718 | INFO | Sanic Extensions:
+2025-12-16 17:46:53,718 | INFO |   > injection [0 dependencies; 0 constants]
+2025-12-16 17:46:53,718 | INFO |   > openapi [http://0.0.0.0:8888/docs]
+2025-12-16 17:46:53,719 | INFO |   > http 
+2025-12-16 17:46:53,719 | INFO |   > templating [jinja2==3.1.2]
+2025-12-16 17:46:53,781 | INFO | 📦 初始化数据库: sqlite
+2025-12-16 17:46:53,781 | INFO | 📁 SQLite数据库路径: ../data/yprompt.db
+2025-12-16 17:46:53,799 | INFO | ✅ SQLite连接成功: ../data/yprompt.db
+2025-12-16 17:46:53,801 | INFO | 📦 SQLite数据库为空，开始初始化...
+2025-12-16 17:46:53,829 | INFO | ✅ SQLite表结构初始化完成
+2025-12-16 17:46:54,095 | INFO | ✅ 默认管理员账号创建成功: admin / admin123
+2025-12-16 17:46:54,095 | INFO | ✅ 数据库初始化成功: sqlite
+2025-12-16 17:47:49,151 | INFO | Created user AI config successfully: user_id=1
+2025-12-16 17:48:19,411 | INFO | ✅ 操练场分享创建成功: user_id=1, share_code=fFNeyuSuDY6M
+2025-12-16 17:48:26,191 | INFO | ✅ 删除操练场分享: user_id=1, share_code=fFNeyuSuDY6M
