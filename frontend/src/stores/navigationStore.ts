@@ -1,7 +1,8 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
+import { useAuthStore } from './authStore'
 
-export type ModuleType = 'generate' | 'optimize' | 'playground' | 'library'
+export type ModuleType = 'generate' | 'optimize' | 'playground' | 'library' | 'community'
 
 export interface ModuleConfig {
   id: ModuleType
@@ -9,6 +10,7 @@ export interface ModuleConfig {
   icon: string
   path: string
   color: string
+  requiresCommunity?: boolean  // 是否需要社区功能启用
 }
 
 export const useNavigationStore = defineStore('navigation', () => {
@@ -16,9 +18,10 @@ export const useNavigationStore = defineStore('navigation', () => {
   const currentModule = ref<ModuleType>('generate')
   const sidebarCollapsed = ref(false)
   const isMobile = ref(false)
+  const communityEnabled = ref(false)  // 社区功能是否启用
 
-  // 模块配置
-  const modules: ModuleConfig[] = [
+  // 所有模块配置
+  const allModules: ModuleConfig[] = [
     {
       id: 'generate',
       name: '生成',
@@ -35,10 +38,18 @@ export const useNavigationStore = defineStore('navigation', () => {
     },
     {
       id: 'playground',
-      name: '操练场',
+      name: '演练',
       icon: '🎯',
       path: '/playground',
       color: '#10B981'
+    },
+    {
+      id: 'community',
+      name: '广场',
+      icon: '👥',
+      path: '/community',
+      color: '#EC4899',
+      requiresCommunity: true  // 需要社区功能
     },
     {
       id: 'library',
@@ -49,9 +60,19 @@ export const useNavigationStore = defineStore('navigation', () => {
     }
   ]
 
+  // 根据社区功能状态过滤可见模块
+  const modules = computed(() => {
+    return allModules.filter(m => {
+      if (m.requiresCommunity) {
+        return communityEnabled.value
+      }
+      return true
+    })
+  })
+
   // 计算属性
   const currentModuleConfig = computed(() => {
-    return modules.find(m => m.id === currentModule.value) || modules[0]
+    return modules.value.find(m => m.id === currentModule.value) || modules.value[0]
   })
 
   const sidebarWidth = computed(() => {
@@ -76,7 +97,28 @@ export const useNavigationStore = defineStore('navigation', () => {
   }
 
   const getModuleByPath = (path: string): ModuleConfig | undefined => {
-    return modules.find(m => m.path === path)
+    return modules.value.find(m => m.path === path)
+  }
+
+  // 检查并设置社区功能状态
+  const checkCommunityFeature = async () => {
+    try {
+      const authStore = useAuthStore()
+      const config = authStore.authConfig
+      
+      // 只有开启了Linux.do OAuth或允许注册时才启用社区功能
+      // 注意字段名：linuxdo_enabled（下划线小写）和 registration_enabled
+      communityEnabled.value = !!(config?.linuxdo_enabled || config?.registration_enabled)
+      
+      console.log('社区功能状态:', {
+        linuxdo_enabled: config?.linuxdo_enabled,
+        registration_enabled: config?.registration_enabled,
+        communityEnabled: communityEnabled.value
+      })
+    } catch (error) {
+      console.error('检查社区功能失败:', error)
+      communityEnabled.value = false
+    }
   }
 
   return {
@@ -84,6 +126,7 @@ export const useNavigationStore = defineStore('navigation', () => {
     currentModule,
     sidebarCollapsed,
     isMobile,
+    communityEnabled,
     modules,
     
     // 计算属性
@@ -94,6 +137,7 @@ export const useNavigationStore = defineStore('navigation', () => {
     setCurrentModule,
     toggleSidebar,
     setMobile,
-    getModuleByPath
+    getModuleByPath,
+    checkCommunityFeature
   }
 })

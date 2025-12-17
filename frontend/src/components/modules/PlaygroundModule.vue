@@ -13,6 +13,7 @@
       :system-prompt="systemPrompt"
       :snapshot="shareSnapshot"
       :provider-info="currentProviderSnapshot"
+      :prompt-id="prefillPayload?.promptId"
       @close="closeShareModal"
       @shared="handleShareCompleted"
     />
@@ -20,7 +21,7 @@
     <div class="bg-white rounded-lg shadow-sm p-4 mb-4 flex-shrink-0">
       <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div class="min-w-0">
-          <h1 class="text-xl lg:text-2xl font-bold text-gray-900">提示词操练场</h1>
+          <h1 class="text-xl lg:text-2xl font-bold text-gray-900">提示词演练</h1>
           <p class="text-sm text-gray-500">实时调试提示词、网页、图表与可视化 Artifact</p>
         </div>
         <div class="flex items-center gap-2 flex-shrink-0 flex-wrap sm:flex-nowrap">
@@ -304,7 +305,7 @@ const loadPromptForPlayground = async (promptId: number) => {
       artifact: null
     }
   } catch (error: any) {
-    console.error('加载提示词到操练场失败:', error)
+    console.error('加载提示词到演练失败:', error)
     alert(`加载失败: ${error.message || '未知错误'}`)
   }
 }

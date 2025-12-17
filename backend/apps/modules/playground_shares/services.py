@@ -77,8 +77,12 @@ class PlaygroundShareService:
         share_code = await self._generate_unique_code()
         expires_value = expires_at.strftime('%Y-%m-%d %H:%M:%S') if expires_at else None
 
+        # 可选：关联提示词ID（从详情页演练时传入）
+        prompt_id = payload.get('prompt_id')
+
         fields = {
             'user_id': user_id,
+            'prompt_id': prompt_id,  # 关联提示词
             'share_code': share_code,
             'title': title,
             'system_prompt': system_prompt,

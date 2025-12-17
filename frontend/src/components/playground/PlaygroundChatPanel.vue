@@ -57,7 +57,7 @@
         <div class="w-16 h-16 rounded-2xl bg-white border border-gray-200 flex items-center justify-center mb-4">
           <Sparkles class="w-8 h-8 text-gray-300" />
         </div>
-        <p class="text-base font-medium text-gray-700 mb-2">欢迎使用提示词操练场</p>
+        <p class="text-base font-medium text-gray-700 mb-2">欢迎使用提示词演练</p>
         <p class="text-sm text-gray-500 max-w-xs">
           对话生成结果会在右侧实时渲染
         </p>
