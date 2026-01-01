@@ -370,7 +370,10 @@
             <span>思考过程</span>
             <span class="text-gray-400">生成中 · {{ formatSecondsLabel(streamingElapsedSeconds) }}</span>
           </div>
-          <div class="text-sm text-gray-800 whitespace-pre-wrap leading-relaxed">
+          <div
+            ref="streamingThoughtRef"
+            class="text-sm text-gray-800 whitespace-pre-wrap leading-relaxed max-h-40 overflow-y-auto pr-1"
+          >
             {{ streamingThought }}
           </div>
         </div>
@@ -718,6 +721,7 @@ const showStreamingThoughtCard = computed(() => isTextModel.value && !!streaming
 const hasSystemPrompt = computed(() => !!drawingStore.systemPrompt?.trim())
 const thoughtCollapseState = ref<Map<string, boolean>>(new Map())
 const streamingElapsedSeconds = computed(() => props.elapsedTime ?? 0)
+const streamingThoughtRef = ref<HTMLElement | null>(null)
 
 const formatSecondsLabel = (seconds: number) => {
   if (!seconds || seconds <= 0) return '<1s'
@@ -746,6 +750,15 @@ const toggleThoughtExpanded = (messageId: string) => {
   const current = isThoughtExpanded(messageId)
   thoughtCollapseState.value.set(messageId, !current)
 }
+
+watch(streamingThought, () => {
+  nextTick(() => {
+    const el = streamingThoughtRef.value
+    if (el) {
+      el.scrollTop = el.scrollHeight
+    }
+  })
+})
 
 // 监听 store 的变化
 watch(
