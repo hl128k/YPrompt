@@ -79,15 +79,18 @@ const callGemini = async (model: string, payload: any) => {
     let baseUrl = appConfig.baseUrl.replace(/\/$/, "");
     if (!baseUrl.startsWith("http")) baseUrl = `https://${baseUrl}`;
 
-    // Construct Standard REST URL
-    const url = `${baseUrl}/v1beta/models/${model}:generateContent?key=${apiKey}`;
+    // Construct Standard REST URL (使用 header 传递 API key)
+    const url = `${baseUrl}/v1beta/models/${model}:generateContent`;
 
     console.log(`[Gemini Request] POST ${url}`);
 
     try {
         const response = await fetch(url, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+                "Content-Type": "application/json",
+                "x-goog-api-key": apiKey  // 添加 API Key 到 header
+            },
             body: JSON.stringify(payload)
         });
 

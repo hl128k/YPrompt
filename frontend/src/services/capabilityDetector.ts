@@ -771,11 +771,7 @@ export class CapabilityDetector {
       
       // 拼接模型特定路径
       apiUrl = `${apiUrl}/models/${modelId}:generateContent`
-      
-      // 添加API key参数
-      const url = new URL(apiUrl)
-      url.searchParams.set('key', provider.apiKey)
-      
+
       // 转换消息格式
       const contents = messages.map(msg => ({
         role: msg.role === 'assistant' ? 'model' : 'user',
@@ -789,10 +785,11 @@ export class CapabilityDetector {
         }
       }
 
-      const response = await fetch(url.toString(), {
+      const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'x-goog-api-key': provider.apiKey  // 使用 header 传递 API key
         },
         body: JSON.stringify(requestBody)
       })

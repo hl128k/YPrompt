@@ -93,8 +93,8 @@ export class GeminiDrawingService {
     silent: boolean = false,  // 静默模式，不输出日志
     systemPrompt?: string
   ): Promise<GeminiResponse> {
-    // 根据官方文档，使用查询参数传递 API key
-    const url = `${this.baseUrl}/models/${model}:generateContent?key=${this.apiKey}`
+    // 使用 header 传递 API key
+    const url = `${this.baseUrl}/models/${model}:generateContent`
 
     // 优化：图像生成模型只需要最近的上下文（加快生图速度）
     // 只取最近一条AI消息（包含图片+thoughtSignature）和最新用户消息
@@ -202,7 +202,8 @@ export class GeminiDrawingService {
     const response = await fetch(url, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'x-goog-api-key': this.apiKey  // 添加 API Key 到 header
       },
       body: JSON.stringify(requestBody),
       signal: abortSignal  // 支持中断请求
@@ -434,8 +435,8 @@ export class GeminiDrawingService {
     abortSignal?: AbortSignal,  // 支持中断请求
     systemPrompt?: string
   ): AsyncIterable<{ text?: string; thought?: string; done?: boolean }> {
-    // 使用SSE格式的流式API，根据官方文档使用查询参数传递 API key
-    const url = `${this.baseUrl}/models/${model}:streamGenerateContent?alt=sse&key=${this.apiKey}`
+    // 使用SSE格式的流式API，通过 header 传递 API key
+    const url = `${this.baseUrl}/models/${model}:streamGenerateContent?alt=sse`
 
     // 优化：图像生成模型只需要最近的上下文（加快生图速度）
     // 只取最近一条AI消息（包含图片+thoughtSignature）和最新用户消息
@@ -521,7 +522,8 @@ export class GeminiDrawingService {
     const response = await fetch(url, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'x-goog-api-key': this.apiKey  // 添加 API Key 到 header
       },
       body: JSON.stringify(requestBody),
       signal: abortSignal  // 支持中断请求
@@ -600,11 +602,12 @@ export class GeminiDrawingService {
    */
   async validateApiKey(): Promise<boolean> {
     try {
-      const url = `${this.baseUrl}/models/gemini-1.5-pro:generateContent?key=${this.apiKey}`
+      const url = `${this.baseUrl}/models/gemini-1.5-pro:generateContent`
       const response = await fetch(url, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'x-goog-api-key': this.apiKey  // 添加 API Key 到 header
         },
         body: JSON.stringify({
           contents: [{
@@ -624,8 +627,12 @@ export class GeminiDrawingService {
    */
   async listModels(): Promise<Array<{ name: string; displayName: string }>> {
     try {
-      const url = `${this.baseUrl}/models?key=${this.apiKey}`
-      const response = await fetch(url)
+      const url = `${this.baseUrl}/models`
+      const response = await fetch(url, {
+        headers: {
+          'x-goog-api-key': this.apiKey  // 添加 API Key 到 header
+        }
+      })
       if (!response.ok) {
         throw new Error('获取模型列表失败')
       }
